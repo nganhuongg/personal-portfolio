@@ -1,0 +1,2 @@
+# This portfolio is a Vite/React frontend project.
+# No Python dependencies are required to run or build the app.
