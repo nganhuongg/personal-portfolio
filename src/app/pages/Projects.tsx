@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { Github, ExternalLink } from "lucide-react";
+import { useLocation } from "react-router";
 import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { ProjectDemo } from "../components/ProjectDemo";
@@ -57,6 +59,27 @@ const projects = [
 ];
 
 export function Projects() {
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (!hash) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    const targetId = hash.slice(1);
+    const targetElement = document.getElementById(targetId);
+
+    if (!targetElement) {
+      return;
+    }
+
+    // Wait one frame so layout is fully painted before scrolling to the anchor card.
+    requestAnimationFrame(() => {
+      targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [hash]);
+
   return (
     <div className="w-full py-20 px-6">
       <div className="max-w-[1100px] mx-auto">
@@ -71,7 +94,15 @@ export function Projects() {
 
         <div className="space-y-12">
           {projects.map((project, index) => (
-            <Card id={project.id} key={index} className="p-10 hover:shadow-lg transition-all scroll-mt-24">
+            <Card
+              id={project.id}
+              key={index}
+              className={`scroll-mt-24 p-10 transition-all ${
+                hash === `#${project.id}`
+                  ? "border-primary/60 shadow-lg ring-2 ring-primary/15"
+                  : "hover:shadow-lg"
+              }`}
+            >
               <div className="space-y-8">
                 <div>
                   <h2 className="text-3xl mb-4">{project.title}</h2>
