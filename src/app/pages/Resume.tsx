@@ -2,7 +2,7 @@ import { Download, FileText, Mail, Linkedin, Twitter } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import resumeImage from "../../../Resume/resume.png";
-import resumePdf from "../../../Resume/CV.pdf";
+import resumePdf from "../../../Resume/resume.pdf";
 
 export function Resume() {
   return (

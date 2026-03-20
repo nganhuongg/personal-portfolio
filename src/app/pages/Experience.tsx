@@ -33,7 +33,7 @@ const experiences = [
     role: "Computer Science Olympiad Competitor",
     organization: "Phu Tho Province",
     location: "Vietnam",
-    period: "2023 - 2024",
+    period: "2022 - 2025",
     type: "Competition",
     description: "Competed in provincial and regional-level computer science competitions, specializing in algorithm design and optimization.",
     responsibilities: [

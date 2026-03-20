@@ -14,7 +14,7 @@ const achievements = [
     icon: Medal,
     title: "Silver Medal",
     event: "Vietnam Northern Summer Camp - Computer Science",
-    date: "2024",
+    date: "2023",
     category: "Competition",
     description: "Recognized for outstanding performance in advanced algorithms and data structures at the regional camp.",
   },
