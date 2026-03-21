@@ -54,7 +54,7 @@ const projects = [
       "Statistical correlation analysis",
     ],
     github: "https://github.com/kh268/urban-planner",
-    demo: "https://www.figma.com/make/7EPh8E80Ela2YpQTDqVpPt/Environmental-Dashboard-Mockup?t=O0KrN0P3zq8DAz6S-1",
+    demo: "https://www.figma.com/make/7EPh8E80Ela2YpQTDqVpPt/Environmental-Dashboard-Mockup?t=79OECReUxUjusudE-20&fullscreen=1",
   },
 ];
 
