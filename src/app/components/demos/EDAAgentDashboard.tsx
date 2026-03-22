@@ -11,17 +11,25 @@ import {
 import { Card } from "../ui/card";
 import workflowImage from "../../../assets/eda-plots/structure.png";
 import missingHeatmapImage from "../../../assets/eda-plots/missing_heatmap.png";
-import aTreeDistributionImage from "../../../assets/eda-plots/a-tree-distribution.png";
-import bTreeBoxplotImage from "../../../assets/eda-plots/b-tree-boxplot.png";
-import cTreeCorrelationImage from "../../../assets/eda-plots/c-tree-correlation.png";
-import dTreeDistributionImage from "../../../assets/eda-plots/d-tree-distribution.png";
+import aTreeDistributionImage from "../../../assets/eda-plots/a-tree-distribution-full.png";
+import aTreeBoxplotImage from "../../../assets/eda-plots/a-tree-boxplot-full.png";
+import aTreeCorrelationImage from "../../../assets/eda-plots/a-tree-correlation-full.png";
+import bTreeDistributionImage from "../../../assets/eda-plots/b-tree-distribution-full.png";
+import bTreeBoxplotImage from "../../../assets/eda-plots/b-tree-boxplot-full.png";
+import bTreeCorrelationImage from "../../../assets/eda-plots/b-tree-correlation-full.png";
+import cTreeDistributionImage from "../../../assets/eda-plots/c-tree-distribution-full.png";
+import cTreeBoxplotImage from "../../../assets/eda-plots/c-tree-boxplot-full.png";
+import cTreeCorrelationImage from "../../../assets/eda-plots/c-tree-correlation-full.png";
+import dTreeDistributionImage from "../../../assets/eda-plots/d-tree-distribution-full.png";
+import dTreeBoxplotImage from "../../../assets/eda-plots/d-tree-boxplot-full.png";
+import dTreeCorrelationImage from "../../../assets/eda-plots/d-tree-correlation-full.png";
 import {
   anomalyFindings,
   correlationFindings,
+  correlationVisuals,
   edaAuditSummary,
   generatedVisuals,
   insightSupport,
-  missingCellMap,
   missingnessByColumn,
   numericAudit,
   topRiskColumns,
@@ -33,16 +41,21 @@ const COLORS = {
   accent: "#74C69D",
   soft: "#B7E4C7",
   warning: "#D97706",
-  missing: "#D946EF",
-  neutral: "#E5E7EB",
 };
 
 const plotImageMap = {
-  missing_heatmap: missingHeatmapImage,
   a_tree_distribution: aTreeDistributionImage,
+  a_tree_boxplot: aTreeBoxplotImage,
+  a_tree_correlation: aTreeCorrelationImage,
+  b_tree_distribution: bTreeDistributionImage,
   b_tree_boxplot: bTreeBoxplotImage,
+  b_tree_correlation: bTreeCorrelationImage,
+  c_tree_distribution: cTreeDistributionImage,
+  c_tree_boxplot: cTreeBoxplotImage,
   c_tree_correlation: cTreeCorrelationImage,
   d_tree_distribution: dTreeDistributionImage,
+  d_tree_boxplot: dTreeBoxplotImage,
+  d_tree_correlation: dTreeCorrelationImage,
 };
 
 function formatRisk(value: number) {
@@ -182,52 +195,30 @@ function RiskRankingChart() {
 }
 
 function MissingnessHotspotCard() {
-  const rowCount = 108;
-
   return (
     <ChartCard
-      title="Missingness Hotspots"
-      description="This is a rectangular missingness heatmap built from the actual CSV, not just the markdown summary. Each strip shows row-level completeness for a column, and the right side keeps the missing-count list explicit."
+      title="Missingness Heatmap"
+      description="This section now uses the actual generated `missing_heatmap.png` artifact from the EDA agent, so the report shows the same missingness evidence that the pipeline produced."
     >
       <div className="space-y-5">
-        <div className="space-y-3">
-          {missingnessByColumn.map((item) => (
-            <div key={item.column} className="grid grid-cols-[160px_1fr_80px] items-center gap-3">
-              <p className="text-xs font-medium text-foreground">{item.column}</p>
-              <div
-                className="grid gap-[2px] rounded-lg border border-border/60 bg-muted/15 p-2"
-                style={{ gridTemplateColumns: "repeat(18, minmax(0, 1fr))" }}
-              >
-                {Array.from({ length: rowCount }, (_, index) => {
-                  const isMissing = missingCellMap[item.column]?.includes(index);
-                  return (
-                    <span
-                      key={`${item.column}-${index}`}
-                      className="h-2.5 rounded-[2px]"
-                      style={{
-                        backgroundColor: isMissing ? COLORS.missing : COLORS.neutral,
-                        opacity: isMissing ? 1 : 0.85,
-                      }}
-                    />
-                  );
-                })}
-              </div>
-              <p className="text-right text-xs text-muted-foreground">
-                {item.missingCount} miss
-              </p>
-            </div>
-          ))}
+        <div className="overflow-hidden rounded-2xl border border-border/70 bg-background">
+          <img
+            src={missingHeatmapImage}
+            alt="Generated missing-value heatmap from the EDA agent report"
+            className="h-auto w-full object-cover"
+          />
         </div>
-
-        <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
-          <span className="inline-flex items-center gap-2">
-            <span className="h-3 w-3 rounded-sm" style={{ backgroundColor: COLORS.neutral }} />
-            observed value
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <span className="h-3 w-3 rounded-sm" style={{ backgroundColor: COLORS.missing }} />
-            missing value
-          </span>
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {missingnessByColumn
+            .filter((item) => item.missingCount > 0)
+            .map((item) => (
+              <div key={item.column} className="rounded-xl border border-border/60 bg-muted/20 p-4">
+                <p className="text-sm font-semibold text-foreground">{item.column}</p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {item.missingCount} missing values ({formatPct(item.missingRatio)})
+                </p>
+              </div>
+            ))}
         </div>
       </div>
     </ChartCard>
@@ -282,18 +273,38 @@ function CorrelationReportCard() {
   return (
     <ChartCard
       title="Correlation Findings"
-      description="Instead of a line graph, this section writes the strongest relationships directly in report style. Each item states what correlates with what, and includes the exact Pearson's r value."
+      description="This section combines the strongest report-style Pearson findings with the generated A, B, C, and D correlation heatmaps so the narrative and visual evidence stay together."
     >
-      <div className="grid gap-4 md:grid-cols-2">
-        {correlationFindings.map((item) => (
-          <div key={`${item.left}-${item.right}`} className="rounded-xl border border-border/60 bg-muted/20 p-4">
-            <p className="text-sm font-semibold text-foreground">
-              {item.left} ↔ {item.right}
-            </p>
-            <p className="mt-2 text-sm text-primary">Pearson's r = {item.pearsonR.toFixed(4)}</p>
-            <p className="mt-2 text-sm text-muted-foreground">{item.note}</p>
-          </div>
-        ))}
+      <div className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-2">
+          {correlationFindings.map((item) => (
+            <div key={`${item.left}-${item.right}`} className="rounded-xl border border-border/60 bg-muted/20 p-4">
+              <p className="text-sm font-semibold text-foreground">
+                {item.left} ↔ {item.right}
+              </p>
+              <p className="mt-2 text-sm text-primary">Pearson&apos;s r = {item.pearsonR.toFixed(4)}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{item.note}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid gap-6 xl:grid-cols-2">
+          {correlationVisuals.map((item) => (
+            <div key={item.title} className="space-y-3">
+              <div className="overflow-hidden rounded-2xl border border-border/70 bg-background">
+                <img
+                  src={plotImageMap[item.imageKey as keyof typeof plotImageMap]}
+                  alt={item.title}
+                  className="h-auto w-full object-cover"
+                />
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-semibold text-foreground">{item.title}</p>
+                <p className="text-sm text-muted-foreground">{item.caption}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </ChartCard>
   );
@@ -339,7 +350,7 @@ function GeneratedPlotsGallery() {
   return (
     <ChartCard
       title="Generated Plot Evidence"
-      description="These are the actual plot artifacts produced by the agent and pulled into the portfolio demo. They help the case study feel grounded in real outputs instead of recreated mock visuals."
+      description="This section now focuses on the full distribution and boxplot set for A, B, C, and D so the evidence gallery stays centered on spread, quartiles, and outlier shape."
     >
       <div className="grid gap-6 xl:grid-cols-2">
         {generatedVisuals.map((item) => (
@@ -422,7 +433,7 @@ export function EDAAgentDashboard() {
       <Section
         eyebrow="Prioritization"
         title="Risk ranking still drives the first analyst move"
-        summary="The latest report keeps the same core pattern: tree-cover and δLST variables dominate the risk list, so the agent immediately focuses the audit on the environmental signal."
+        summary="The latest report keeps the same core pattern: tree-cover and delta LST variables dominate the risk list, so the agent immediately focuses the audit on the environmental signal."
       >
         <RiskRankingChart />
       </Section>
@@ -430,7 +441,7 @@ export function EDAAgentDashboard() {
       <Section
         eyebrow="Missingness"
         title="Missingness is sparse but localized"
-        summary="Instead of a generic summary card, the demo now shows a rectangular missing-value heatmap and the exact missing count for every column. That makes it obvious that the issue is narrow and concentrated."
+        summary="Instead of a generic summary card, the demo now shows the generated missing-value heatmap and the exact missing count for the affected columns."
       >
         <MissingnessHotspotCard />
       </Section>
@@ -445,8 +456,8 @@ export function EDAAgentDashboard() {
 
       <Section
         eyebrow="Correlation"
-        title="Pearson relationships are written directly into the report view"
-        summary="You asked to avoid the line chart here, so this section now reads like an analyst note: what correlates with what, and the exact Pearson's r value for each key relationship."
+        title="Pearson relationships and heatmaps now sit together"
+        summary="The correlation section now pairs analyst-style findings with the generated A, B, C, and D heatmaps so the written interpretation and image evidence are in one place."
       >
         <CorrelationReportCard />
       </Section>
@@ -464,8 +475,8 @@ export function EDAAgentDashboard() {
 
       <Section
         eyebrow="Evidence"
-        title="Generated plots are embedded as supporting artifacts"
-        summary="The report now uses the actual plot files from your `eda_plots` output rather than only abstract summaries. That gives the project a stronger sense of real execution and traceable evidence."
+        title="Generated plots now focus on distribution and boxplot coverage"
+        summary="The gallery keeps the full A, B, C, and D distribution and boxplot artifacts so the report still shows concrete outputs without repeating the correlation heatmaps."
       >
         <GeneratedPlotsGallery />
       </Section>

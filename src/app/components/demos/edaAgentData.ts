@@ -162,6 +162,29 @@ export const correlationFindings: CorrelationFinding[] = [
   },
 ];
 
+export const correlationVisuals: PlotGalleryItem[] = [
+  {
+    title: "A Tree Cover Correlation Heatmap",
+    caption: "Correlation view for the A canopy segment, showing how its temperature and peer canopy relationships cluster together.",
+    imageKey: "a_tree_correlation",
+  },
+  {
+    title: "B Tree Cover Correlation Heatmap",
+    caption: "B's correlation heatmap makes the strongest canopy alignments visible in one frame, matching the high Pearson relationships in the report.",
+    imageKey: "b_tree_correlation",
+  },
+  {
+    title: "C Tree Cover Correlation Heatmap",
+    caption: "The C segment keeps the same environmental structure, with strong movement alongside the neighboring tree-cover variables.",
+    imageKey: "c_tree_correlation",
+  },
+  {
+    title: "D Tree Cover Correlation Heatmap",
+    caption: "D's heatmap shows the canopy-temperature coupling still exists, but with slightly weaker intensity than the strongest pairs.",
+    imageKey: "d_tree_correlation",
+  },
+];
+
 export const insightSupport: InsightPoint[] = [
   {
     title: "Canopy variables are the main risk surface",
@@ -198,14 +221,19 @@ export const anomalyFindings = [
 
 export const generatedVisuals: PlotGalleryItem[] = [
   {
-    title: "Missingness Heatmap",
-    caption: "The generated audit heatmap confirms that missingness is concentrated in the tree-cover columns rather than spread across the whole table.",
-    imageKey: "missing_heatmap",
-  },
-  {
     title: "A Tree Cover Distribution",
     caption: "Distribution output used by the agent to estimate spread, skew, and central tendency for the A canopy group.",
     imageKey: "a_tree_distribution",
+  },
+  {
+    title: "A Tree Cover Boxplot",
+    caption: "Boxplot evidence for the A canopy segment, useful for spotting spread, median placement, and outlier boundaries at a glance.",
+    imageKey: "a_tree_boxplot",
+  },
+  {
+    title: "B Tree Cover Distribution",
+    caption: "Distribution output for the B canopy group, where the spread is broader and the audit begins to see a more irregular shape.",
+    imageKey: "b_tree_distribution",
   },
   {
     title: "B Tree Cover Boxplot",
@@ -213,13 +241,23 @@ export const generatedVisuals: PlotGalleryItem[] = [
     imageKey: "b_tree_boxplot",
   },
   {
-    title: "C Tree Cover Correlation Heatmap",
-    caption: "A generated peer-correlation view showing how strongly the canopy variables align in the C segment.",
-    imageKey: "c_tree_correlation",
+    title: "C Tree Cover Distribution",
+    caption: "Distribution output for the C canopy segment, included so the report keeps per-column evidence available for manual review.",
+    imageKey: "c_tree_distribution",
+  },
+  {
+    title: "C Tree Cover Boxplot",
+    caption: "C's boxplot gives a compact view of quartiles and tail behavior, complementing the outlier summary above.",
+    imageKey: "c_tree_boxplot",
   },
   {
     title: "D Tree Cover Distribution",
-    caption: "Another generated plot included to show how the audit report keeps per-column evidence available for manual review.",
+    caption: "Distribution output for the D canopy segment, showing the final canopy slice with its own spread and center.",
     imageKey: "d_tree_distribution",
+  },
+  {
+    title: "D Tree Cover Boxplot",
+    caption: "D's boxplot rounds out the manual evidence set so all four canopy groups have the same distribution and quartile view.",
+    imageKey: "d_tree_boxplot",
   },
 ];
