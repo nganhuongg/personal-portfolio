@@ -55,6 +55,7 @@ const projects = [
     ],
     github: "https://github.com/kh268/urban-planner",
     demo: "https://www.figma.com/make/7EPh8E80Ela2YpQTDqVpPt/Environmental-Dashboard-Mockup?t=79OECReUxUjusudE-20&fullscreen=1",
+    caseStudy: "https://www.notion.so/XANHinsights-327a00f7305b80cbb94ed6177235de1c?source=copy_link",
   },
 ];
 
@@ -156,6 +157,18 @@ export function Projects() {
                       <Button className="h-11">
                         <ExternalLink className="mr-2 h-4 w-4" />
                         View Demo
+                      </Button>
+                    </a>
+                  ) : null}
+                  {project.caseStudy ? (
+                    <a
+                      href={project.caseStudy}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button variant="outline" className="h-11">
+                        <ExternalLink className="mr-2 h-4 w-4" />
+                        Full case study
                       </Button>
                     </a>
                   ) : null}
