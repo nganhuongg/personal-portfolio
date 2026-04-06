@@ -1,5 +1,54 @@
-import { Outlet, NavLink, useLocation } from "react-router";
+import { Outlet, NavLink, useLocation, useNavigate } from "react-router";
 import { Github } from "lucide-react";
+
+// The home page is a single scrollable page. These items link to sections within it.
+// On other pages, clicking them navigates home first, then scrolls to the section.
+// Resume is first because it appears first on the page (right after the hero).
+const sectionNavItems = [
+  { label: "About", anchor: "about" },
+  { label: "Resume", anchor: "resume" },
+  { label: "Projects", anchor: "projects" },
+  { label: "Experience", anchor: "experience" },
+  { label: "Skills", anchor: "skills" },
+  { label: "Achievements", anchor: "achievements" },
+];
+
+// A nav link that scrolls to a section ID on the home page.
+// If the user is on a different page, it navigates to "/" first, then scrolls.
+function SectionNavLink({
+  anchor,
+  label,
+  isHome,
+}: {
+  anchor: string;
+  label: string;
+  isHome: boolean;
+}) {
+  const navigate = useNavigate();
+
+  function handleClick(e: React.MouseEvent) {
+    e.preventDefault();
+    if (isHome) {
+      document.getElementById(anchor)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      // Navigate to home, then wait one frame for the page to render before scrolling
+      navigate("/");
+      setTimeout(() => {
+        document.getElementById(anchor)?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+  }
+
+  const className = isHome
+    ? "text-white/80 hover:text-white transition-colors cursor-pointer"
+    : "text-foreground hover:text-primary transition-colors cursor-pointer";
+
+  return (
+    <a href={`#${anchor}`} onClick={handleClick} className={className}>
+      {label}
+    </a>
+  );
+}
 
 export function Layout() {
   const { pathname } = useLocation();
@@ -16,8 +65,8 @@ export function Layout() {
       >
         <div className="max-w-[1100px] mx-auto px-6">
           <div className="flex items-center justify-between h-16">
-            <NavLink 
-              to="/" 
+            <NavLink
+              to="/"
               className={
                 isHome
                   ? "font-medium text-white hover:text-white/80 transition-colors"
@@ -26,91 +75,21 @@ export function Layout() {
             >
               Ngan Huong Nguyen
             </NavLink>
-            
+
             <div className="flex items-center gap-8">
               <div className="hidden md:flex items-center gap-6">
-                <NavLink
-                  to="/projects"
-                  className={({ isActive }) =>
-                    `transition-colors ${
-                      isHome
-                        ? isActive
-                          ? "text-white"
-                          : "text-white/80 hover:text-white"
-                        : isActive
-                          ? "text-primary"
-                          : "text-foreground hover:text-primary"
-                    }`
-                  }
-                >
-                  Projects
-                </NavLink>
-                <NavLink
-                  to="/experience"
-                  className={({ isActive }) =>
-                    `transition-colors ${
-                      isHome
-                        ? isActive
-                          ? "text-white"
-                          : "text-white/80 hover:text-white"
-                        : isActive
-                          ? "text-primary"
-                          : "text-foreground hover:text-primary"
-                    }`
-                  }
-                >
-                  Experience
-                </NavLink>
-                <NavLink
-                  to="/achievements"
-                  className={({ isActive }) =>
-                    `transition-colors ${
-                      isHome
-                        ? isActive
-                          ? "text-white"
-                          : "text-white/80 hover:text-white"
-                        : isActive
-                          ? "text-primary"
-                          : "text-foreground hover:text-primary"
-                    }`
-                  }
-                >
-                  Achievements
-                </NavLink>
-                <NavLink
-                  to="/skills"
-                  className={({ isActive }) =>
-                    `transition-colors ${
-                      isHome
-                        ? isActive
-                          ? "text-white"
-                          : "text-white/80 hover:text-white"
-                        : isActive
-                          ? "text-primary"
-                          : "text-foreground hover:text-primary"
-                    }`
-                  }
-                >
-                  Skills
-                </NavLink>
-                <NavLink
-                  to="/resume"
-                  className={({ isActive }) =>
-                    `transition-colors ${
-                      isHome
-                        ? isActive
-                          ? "text-white"
-                          : "text-white/80 hover:text-white"
-                        : isActive
-                          ? "text-primary"
-                          : "text-foreground hover:text-primary"
-                    }`
-                  }
-                >
-                  Resume
-                </NavLink>
+                {/* Section-scroll links for the single-page home */}
+                {sectionNavItems.map((item) => (
+                  <SectionNavLink
+                    key={item.anchor}
+                    anchor={item.anchor}
+                    label={item.label}
+                    isHome={isHome}
+                  />
+                ))}
+
               </div>
-              
+
               <a
                 href="https://github.com/nganhuongg"
                 target="_blank"
@@ -128,7 +107,7 @@ export function Layout() {
           </div>
         </div>
       </nav>
-      
+
       <main className={isHome ? "" : "pt-16"}>
         <Outlet />
       </main>

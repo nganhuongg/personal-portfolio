@@ -346,6 +346,24 @@ export function ECGAnalysisDashboard() {
         title="Changing the model helps less than changing the class balance signal"
         summary="Two notebook experiments reinforce the same conclusion. Weighting the classes improves rare-label sensitivity more than feature pruning, while Random Forest adds complexity without fixing macro performance."
       >
+        <Card className="border-border/70 bg-card/90 p-5">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">
+            Why compare One-vs-Rest Logistic Regression and Random Forest
+          </p>
+          <div className="mt-3 space-y-3 text-sm text-muted-foreground">
+            <p>
+              One-vs-Rest logistic regression is a strong baseline for this ECG task because the
+              labels are multi-label, the outputs need to stay interpretable per diagnosis, and
+              class weighting can be applied directly to push the model toward rare-condition recall.
+            </p>
+            <p>
+              Random Forest was included as a higher-capacity comparison to test whether nonlinear
+              feature interactions would recover the tail classes better than a simpler linear
+              boundary. The notebook result is useful precisely because it shows that extra model
+              complexity alone does not fix the imbalance bottleneck.
+            </p>
+          </div>
+        </Card>
         <div className="grid gap-6 xl:grid-cols-2">
           <ModelComparisonChart data={modelComparison} />
           <InterventionComparisonChart data={interventionComparison} />
